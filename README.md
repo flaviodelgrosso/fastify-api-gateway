@@ -27,7 +27,7 @@ When registering the plugin it will register under the hood the following Fastif
 
 - [fastify-reply-from](https://github.com/fastify/fastify-reply-from) plugin, which is used to proxy requests to the backend services.
 - [fastify-rate-limit](https://github.com/fastify/fastify-rate-limit) plugin, which is used to rate limit requests. It is enabled only if `routeLimit` is set.
-- [fastify-middie](https://github.com/fastify/middie) plugin, which is used to apply middlewares on routes.
+- [fastify-middie](https://github.com/fastify/middie) plugin, which is used to apply middlewares on routes. It is enabled only if `middlewares` are set.
 
 ## Routes
 

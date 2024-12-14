@@ -20,6 +20,7 @@ const HTTP_METHODS = [
 ]
 
 /**
+ * Create a handler for the gateway route that proxies the request to the target.
  * @param {GatewayRouteOptions} route
  */
 const createGatewayHandler = route => async (request, reply) => {
@@ -35,6 +36,7 @@ const createGatewayHandler = route => async (request, reply) => {
 }
 
 /**
+ * Register middlewares with Fastify.
  * @param {FastifyInstance} app
  * @param {Middleware[]} [middlewares]
  * @param {string} [prefix]
@@ -46,6 +48,7 @@ function registerMiddlewares(app, middlewares = [], prefix = null) {
 }
 
 /**
+ * Register routes with Fastify.
  * @param {FastifyInstance} app
  * @param {GatewayRouteOptions[]} routes
  */
@@ -68,12 +71,28 @@ function registerRoutes(app, routes) {
 }
 
 /**
+ * Checks if there are any middlewares defined in the options.
+ * @param {FastifyApiGatewayOptions} options
+ * @returns {boolean}
+ */
+function hasMiddlewares(options) {
+  return (
+    options.middlewares?.length > 0 ||
+    options.routes.some(route => route.middlewares?.length > 0)
+  )
+}
+
+/**
  * @param {FastifyInstance} app
  * @param {FastifyApiGatewayOptions} options
  */
 const gatewayPlugin = async (app, options) => {
   await app.register(import('@fastify/reply-from'))
-  await app.register(import('@fastify/middie'))
+
+  // Register middie plugin if there are middlewares defined
+  if (hasMiddlewares(options)) {
+    await app.register(import('@fastify/middie'))
+  }
 
   // Register rate-limit plugin if configured
   if (options.rateLimit) {
