@@ -4,8 +4,11 @@ import type {
   RawServerBase,
   RawServerDefault
 } from 'fastify'
-import type { Handler } from '@fastify/middie'
-import type { FastifyReplyFromHooks } from '@fastify/reply-from'
+import type { Handler, FastifyMiddieOptions } from '@fastify/middie'
+import type {
+  FastifyReplyFromHooks,
+  FastifyReplyFromOptions
+} from '@fastify/reply-from'
 import type {
   RateLimitOptions,
   RateLimitPluginOptions
@@ -26,7 +29,11 @@ declare namespace fastifyApiGateway {
     /** Middlewares to apply to all routes. */
     middlewares?: Handler[]
     /** The rate limit configuration. */
-    rateLimit?: RateLimitOptions & RateLimitPluginOptions
+    rateLimitOptions?: RateLimitOptions & RateLimitPluginOptions
+    /** The reply.from options. */
+    replyFromOptions?: FastifyReplyFromOptions
+    /** The middie options. */
+    middieOptions?: FastifyMiddieOptions
   }
 
   interface GatewayRouteOptions

@@ -87,16 +87,16 @@ function hasMiddlewares(options) {
  * @param {FastifyApiGatewayOptions} options
  */
 const gatewayPlugin = async (app, options) => {
-  await app.register(import('@fastify/reply-from'))
+  await app.register(import('@fastify/reply-from'), options.replyFromOptions)
 
   // Register middie plugin if there are middlewares defined
   if (hasMiddlewares(options)) {
-    await app.register(import('@fastify/middie'))
+    await app.register(import('@fastify/middie'), options.middieOptions)
   }
 
   // Register rate-limit plugin if configured
-  if (options.rateLimit) {
-    await app.register(import('@fastify/rate-limit'), options.rateLimit)
+  if (options.rateLimitOptions) {
+    await app.register(import('@fastify/rate-limit'), options.rateLimitOptions)
   }
 
   registerMiddlewares(app, options.middlewares)

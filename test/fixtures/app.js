@@ -8,7 +8,7 @@ function buildApp(opts = {}) {
   const app = Fastify(opts)
   app.register(plugin, {
     routes,
-    rateLimit: { global: false },
+    rateLimitOptions: { global: false },
     middlewares: [
       (req, res, done) => {
         res.setHeader('x-global-middleware', 'true')
