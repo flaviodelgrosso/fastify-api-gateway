@@ -21,10 +21,10 @@ declare module 'fastify' {
 
 declare namespace fastifyApiGateway {
   type FastifyApiGatewayOptions = {
-    /** Middlewares to apply to all routes. */
-    middlewares?: Handler[]
     /** The routes to register. */
     routes: GatewayRouteOptions[]
+    /** Middlewares to apply to all routes. */
+    middlewares?: Handler[]
     /** The rate limit configuration. */
     rateLimit?: RateLimitOptions & RateLimitPluginOptions
   }
@@ -33,10 +33,10 @@ declare namespace fastifyApiGateway {
     extends Partial<Pick<RouteOptions, 'bodyLimit' | 'config' | 'method'>> {
     /** The prefix to match incoming requests. */
     prefix: string
-    /** The prefix to rewrite the incoming requests. */
-    prefixRewrite?: string
     /** The target URL to forward requests to. */
     target: string
+    /** The prefix to rewrite the incoming requests. */
+    prefixRewrite?: string
     /** @default '/*' */
     pathRegex?: string
     /** Middlewares to apply to the route. */
