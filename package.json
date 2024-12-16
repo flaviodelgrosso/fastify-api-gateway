@@ -64,7 +64,6 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "prettier": "^3.4.2",
-    "restana": "^4.9.9",
     "standard-version": "^9.5.0"
   },
   "lint-staged": {

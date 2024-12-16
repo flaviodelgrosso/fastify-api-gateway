@@ -1,30 +1,31 @@
 'use strict'
 
-import restana from 'restana'
+import Fastify from 'fastify'
 
 function buildTarget() {
-  const remote = restana()
-  remote.get('/api/test', (req, res) => {
+  const target = Fastify()
+
+  target.get('/api/test', (req, res) => {
     res.send({ message: 'Hello, world!' })
   })
 
-  remote.get('/rewritten', (req, res) => {
+  target.get('/rewritten', (req, res) => {
     res.send({ message: 'OK' })
   })
 
-  remote.get('/with-rate-limit', (req, res) => {
+  target.get('/with-rate-limit', (req, res) => {
     res.send({ message: 'OK' })
   })
 
-  remote.post('/without-body-limit', (req, res) => {
+  target.post('/without-body-limit', (req, res) => {
     res.send({ message: 'OK' })
   })
 
-  remote.post('/with-body-limit', (req, res) => {
+  target.post('/with-body-limit', (req, res) => {
     res.send({ message: 'OK' })
   })
 
-  return remote
+  return target
 }
 
 export { buildTarget }

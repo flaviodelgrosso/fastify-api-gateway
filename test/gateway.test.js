@@ -7,7 +7,7 @@ const app = buildApp()
 const target = buildTarget()
 
 before(async () => {
-  await target.start(3001)
+  await target.listen({ port: 3001 })
 })
 
 after(() => target.close())
