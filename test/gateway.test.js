@@ -1,16 +1,10 @@
-import { after, before, test } from 'node:test'
+import { test } from 'node:test'
 
 import { buildApp } from './fixtures/app.js'
 import { buildTarget } from './fixtures/target.js'
 
 const app = buildApp()
 const target = buildTarget()
-
-before(async () => {
-  await target.listen({ port: 3001 })
-})
-
-after(() => target.close())
 
 test('should forward request to target', async t => {
   t.plan(1)
@@ -104,6 +98,8 @@ test('shoud correctly rewrite prefix', async t => {
 
 test('should return 429 when exceeding rate limit', async t => {
   t.plan(4)
+
+  target.persist()
 
   /** @type {import('fastify').InjectOptions} */
   const injectOptions = { method: 'GET', url: '/with-rate-limit' }
