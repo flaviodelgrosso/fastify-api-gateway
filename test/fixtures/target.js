@@ -1,30 +1,19 @@
 'use strict'
 
-import restana from 'restana'
+import nock from 'nock'
+
+const MOCK_TARGET_URL = 'http://fastify-api-gateway.service.mock'
 
 function buildTarget() {
-  const remote = restana()
-  remote.get('/api/test', (req, res) => {
-    res.send({ message: 'Hello, world!' })
-  })
+  const target = nock(MOCK_TARGET_URL)
 
-  remote.get('/rewritten', (req, res) => {
-    res.send({ message: 'OK' })
-  })
+  target.get('/api/test').reply(200, { message: 'Hello, world!' })
+  target.get('/rewritten').reply(200)
+  target.get('/with-rate-limit').reply(200)
+  target.post('/without-body-limit').reply(200)
+  target.post('/with-body-limit').reply(200)
 
-  remote.get('/with-rate-limit', (req, res) => {
-    res.send({ message: 'OK' })
-  })
-
-  remote.post('/without-body-limit', (req, res) => {
-    res.send({ message: 'OK' })
-  })
-
-  remote.post('/with-body-limit', (req, res) => {
-    res.send({ message: 'OK' })
-  })
-
-  return remote
+  return target
 }
 
-export { buildTarget }
+export { buildTarget, MOCK_TARGET_URL }

@@ -9,6 +9,9 @@ function buildApp(opts = {}) {
   app.register(plugin, {
     routes,
     rateLimitOptions: { global: false },
+    replyFromOptions: {
+      undici: false
+    },
     middlewares: [
       (req, res, done) => {
         res.setHeader('x-global-middleware', 'true')
