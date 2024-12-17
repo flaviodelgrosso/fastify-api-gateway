@@ -4,6 +4,7 @@ import type {
   RawServerBase,
   RawServerDefault
 } from 'fastify'
+import { FastifyCachingPluginOptions } from '@fastify/caching'
 import type { Handler, FastifyMiddieOptions } from '@fastify/middie'
 import type {
   FastifyReplyFromHooks,
@@ -34,6 +35,8 @@ declare namespace fastifyApiGateway {
     replyFromOptions?: FastifyReplyFromOptions
     /** The middie options. */
     middieOptions?: FastifyMiddieOptions
+    /** The caching options. */
+    cacheOptions?: FastifyCachingPluginOptions
   }
 
   interface GatewayRouteOptions
@@ -50,6 +53,10 @@ declare namespace fastifyApiGateway {
     middlewares?: Handler[]
     /** Hooks to apply to the reply.from call. */
     hooks?: FastifyReplyFromHooks
+    /** The caching segment to use. */
+    cache?: boolean
+    /** Time to live for the cache. */
+    ttl?: number
   }
 
   export const fastifyApiGateway: FastifyApiGateway

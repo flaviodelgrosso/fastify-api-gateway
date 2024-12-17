@@ -1,16 +1,16 @@
-const target = 'http://localhost:3001'
+import { MOCK_TARGET_URL } from './target.js'
 
 /** @type {import('../../types/plugin.d.ts').GatewayRouteOptions[]} */
 const routes = [
   {
     prefix: '/api',
-    target,
+    target: MOCK_TARGET_URL,
     method: ['GET']
   },
   {
     pathRegex: '',
     prefix: '/with-rate-limit',
-    target,
+    target: MOCK_TARGET_URL,
     method: ['GET'],
     config: {
       rateLimit: {
@@ -22,14 +22,14 @@ const routes = [
   {
     pathRegex: '',
     prefix: '/without-body-limit',
-    target,
+    target: MOCK_TARGET_URL,
     method: ['POST'],
     hooks: []
   },
   {
     pathRegex: '',
     prefix: '/with-body-limit',
-    target,
+    target: MOCK_TARGET_URL,
     bodyLimit: 25600,
     method: ['POST']
   },
@@ -42,19 +42,19 @@ const routes = [
   {
     pathRegex: '',
     prefix: '/route-without-method',
-    target
+    target: MOCK_TARGET_URL
   },
   {
     pathRegex: '',
     prefixRewrite: '/rewritten',
     prefix: '/route-with-prefix-rewrite',
-    target,
+    target: MOCK_TARGET_URL,
     method: ['GET']
   },
   {
     pathRegex: '',
     prefix: '/route-with-middleware',
-    target,
+    target: MOCK_TARGET_URL,
     middlewares: [
       (req, res, done) => {
         res.setHeader('x-route-middleware', 'true')

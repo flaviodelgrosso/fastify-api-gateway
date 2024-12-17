@@ -21,14 +21,26 @@ const HTTP_METHODS = [
 
 /**
  * Create a handler for the gateway route that proxies the request to the target.
+ * @param {FastifyInstance} app
  * @param {GatewayRouteOptions} route
  */
-const createGatewayHandler = route => async (request, reply) => {
+const createGatewayHandler = (app, route) => async (request, reply) => {
   try {
+    if (app.hasDecorator('cache') && route.method === 'GET') {
+      const cachedResponse = await app.cache.get(request.url)
+      if (cachedResponse) {
+        return reply.send(cachedResponse)
+      }
+    }
+
     const newUrl = route.prefixRewrite
       ? request.url.replace(route.prefix, route.prefixRewrite)
       : request.url
 
+    const response = await reply.from(route.target + newUrl, route.hooks)
+    if (route.cache) {
+      app.cache.set(request.url, response, route.ttl)
+    }
     return reply.from(route.target + newUrl, route.hooks)
   } catch (error) {
     return reply.status(error.statusCode || 500).send({ error })
@@ -64,7 +76,7 @@ function registerRoutes(app, routes) {
       method: methods,
       bodyLimit,
       url: `${route.prefix}${pathRegex}`,
-      handler: createGatewayHandler(route),
+      handler: createGatewayHandler(app, route),
       config: route.config
     })
   }
