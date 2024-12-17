@@ -1,12 +1,16 @@
-import { test, describe } from 'node:test'
+import { before, test, describe } from 'node:test'
 
 import { buildApp } from './fixtures/app.js'
 import { buildTarget } from './fixtures/target.js'
 
-const app = buildApp()
-buildTarget()
-
 describe('body limit', () => {
+  let app
+
+  before(() => {
+    app = buildApp()
+    buildTarget()
+  })
+
   test('should return 200 when posting body with 26 KB to /without-body-limit', async t => {
     t.plan(1)
 
