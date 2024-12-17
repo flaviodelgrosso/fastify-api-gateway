@@ -33,6 +33,7 @@
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky",
     "test": "c8 --100 node --test test/**/*.test.js",
+    "test:watch": "c8 --100 node --test --watch test/**/*.test.js",
     "test:lcov": "c8 --100 --reporter=lcov node --test test/**/*.test.js",
     "release": "standard-version",
     "major": "npm run release -- --release-as major",

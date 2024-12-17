@@ -5,6 +5,7 @@
  * @typedef {import('@fastify/middie').Handler} Middleware
  * @typedef {import('./types/plugin.js').GatewayRouteOptions} GatewayRouteOptions
  * @typedef {import('./types/plugin.js').FastifyApiGatewayOptions} FastifyApiGatewayOptions
+ * @typedef {import('./types/plugin.js').GatewayHandler} GatewayHandler
  */
 
 import fp from 'fastify-plugin'
@@ -20,16 +21,33 @@ const HTTP_METHODS = [
 ]
 
 /**
- * Create a handler for the gateway route that proxies the request to the target.
- * @param {FastifyInstance} app
+ * Build the reply object with cache headers.
  * @param {GatewayRouteOptions} route
+ * @param {import('fastify').FastifyReply} reply
+ * @returns
+ */
+const buildReply = (route, reply) => {
+  if (route.cache.etag) {
+    reply.etag(route.cache.etag, route.cache.ttl)
+  }
+
+  if (route.cache.expires) {
+    reply.expires(route.cache.expires)
+  }
+
+  return reply
+}
+
+/**
+ * Create a handler for the gateway route that proxies the request to the target.
+ * @type {GatewayHandler}
  */
 const createGatewayHandler = (app, route) => async (request, reply) => {
   try {
-    if (app.hasDecorator('cache') && route.method === 'GET') {
+    if (route.method === 'GET' && route.cache) {
       const cachedResponse = await app.cache.get(request.url)
       if (cachedResponse) {
-        return reply.send(cachedResponse)
+        return buildReply(route, reply).send(cachedResponse)
       }
     }
 
@@ -38,9 +56,11 @@ const createGatewayHandler = (app, route) => async (request, reply) => {
       : request.url
 
     const response = await reply.from(route.target + newUrl, route.hooks)
+
     if (route.cache) {
       app.cache.set(request.url, response, route.ttl)
     }
+
     return reply.from(route.target + newUrl, route.hooks)
   } catch (error) {
     return reply.status(error.statusCode || 500).send({ error })
@@ -100,6 +120,7 @@ function hasMiddlewares(options) {
  */
 const gatewayPlugin = async (app, options) => {
   await app.register(import('@fastify/reply-from'), options.replyFromOptions)
+  await app.register(import('@fastify/caching'), options.cacheOptions)
 
   // Register middie plugin if there are middlewares defined
   if (hasMiddlewares(options)) {

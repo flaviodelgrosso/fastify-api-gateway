@@ -2,7 +2,10 @@ import type {
   FastifyPluginAsync,
   RouteOptions,
   RawServerBase,
-  RawServerDefault
+  RawServerDefault,
+  FastifyInstance,
+  FastifyRequest,
+  FastifyReply
 } from 'fastify'
 import { FastifyCachingPluginOptions } from '@fastify/caching'
 import type { Handler, FastifyMiddieOptions } from '@fastify/middie'
@@ -53,11 +56,21 @@ declare namespace fastifyApiGateway {
     middlewares?: Handler[]
     /** Hooks to apply to the reply.from call. */
     hooks?: FastifyReplyFromHooks
-    /** The caching segment to use. */
-    cache?: boolean
-    /** Time to live for the cache. */
-    ttl?: number
+    /** The caching options. */
+    cache?: {
+      /** The cache key. */
+      etag?: string
+      /** Time to live. */
+      ttl?: number
+      /** The cache expiration date. */
+      expires?: Date
+    }
   }
+
+  export type GatewayHandler = (
+    app: FastifyInstance,
+    route: GatewayRouteOptions
+  ) => (request: FastifyRequest, reply: FastifyReply) => FastifyReply
 
   export const fastifyApiGateway: FastifyApiGateway
 

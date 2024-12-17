@@ -8,6 +8,13 @@ const routes = [
     method: ['GET']
   },
   {
+    prefix: '/with-cache',
+    target: MOCK_TARGET_URL,
+    method: ['GET'],
+    cache: true,
+    ttl: 10000
+  },
+  {
     pathRegex: '',
     prefix: '/with-rate-limit',
     target: MOCK_TARGET_URL,
